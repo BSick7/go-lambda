@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
-	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/BSick7/go-lambda/kinesis"
+	"github.com/aws/aws-lambda-go/lambda"
 )
 
 func main() {
@@ -13,7 +13,7 @@ func main() {
 
 func handler(event *kinesis.Event) error {
 	for _, record := range event.Records {
-		fmt.Printf("partition key: %s\n", record.Kinesis.PartitionKey)
+		fmt.Printf("partition key: %+v\n", record.Kinesis.PartitionKey)
 		data := map[string]interface{}{}
 		if err := record.Kinesis.JsonUnmarshal(&data); err != nil {
 			fmt.Printf("error reading record: %s", err)
