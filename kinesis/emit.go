@@ -24,15 +24,20 @@ func Emit(stream string, items interface{}) ([]*kinesis.PutRecordsResultEntry, e
 	if err != nil {
 		return nil, fmt.Errorf("could not create kinesis records: %s", err)
 	}
+	batches := batchRecords(records)
 
-	out, err := svc.PutRecords(&kinesis.PutRecordsInput{
-		StreamName: aws.String(stream),
-		Records:    records,
-	})
-	if err != nil {
-		return nil, fmt.Errorf("could not put kinesis records to %q: %s", stream, err)
+	results := make([]*kinesis.PutRecordsResultEntry, 0)
+	for _, batch := range batches {
+		out, err := svc.PutRecords(&kinesis.PutRecordsInput{
+			StreamName: aws.String(stream),
+			Records:    batch,
+		})
+		if err != nil {
+			return nil, fmt.Errorf("could not put kinesis records to %q: %s", stream, err)
+		}
+		results = append(results, out.Records...)
 	}
-	return out.Records, nil
+	return results, nil
 }
 
 func buildRecords(items interface{}) ([]*kinesis.PutRecordsRequestEntry, error) {
@@ -54,4 +59,27 @@ func buildRecords(items interface{}) ([]*kinesis.PutRecordsRequestEntry, error) 
 		}
 	}
 	return records, nil
+}
+
+var maxRequestSize = 5 * 1024 * 1024
+
+// PutRecords Limits: https://docs.aws.amazon.com/cli/latest/reference/kinesis/put-records.html
+//   request <= 500 records
+//   request <= 5MB
+//   record  <= 1MB
+func batchRecords(records []*kinesis.PutRecordsRequestEntry) [][]*kinesis.PutRecordsRequestEntry {
+	batches := make([][]*kinesis.PutRecordsRequestEntry, 0)
+	cur := make([]*kinesis.PutRecordsRequestEntry, 0)
+	size := 0
+	for _, record := range records {
+		if len(cur) >= 500 || (size+len(record.Data)) > maxRequestSize {
+			batches = append(batches, cur)
+			cur = make([]*kinesis.PutRecordsRequestEntry, 0)
+			size = 0
+		}
+		cur = append(cur, record)
+		size += len(record.Data)
+	}
+	batches = append(batches, cur)
+	return batches
 }
