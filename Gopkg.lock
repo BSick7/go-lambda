@@ -40,6 +40,8 @@
     "private/protocol/query/queryutil",
     "private/protocol/rest",
     "private/protocol/xml/xmlutil",
+    "service/dynamodb",
+    "service/dynamodb/dynamodbattribute",
     "service/kinesis",
     "service/sts"
   ]
@@ -60,6 +62,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "86ad6fd371d4c5f1c6bc6b33561d4074bda37a1bdb88b3b67b66c71b6bcbc790"
+  inputs-digest = "de65c463a6c2137f3ad48953d578ab873065c7adeb27578ae6b15aa1f5d41102"
   solver-name = "gps-cdcl"
   solver-version = 1
