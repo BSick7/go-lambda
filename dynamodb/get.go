@@ -18,11 +18,14 @@ func Get(tableName string, keyName string, key string) (map[string]*dynamodb.Att
 		Limit:                  aws.Int64(1),
 		ConsistentRead:         aws.Bool(true),
 		TableName:              aws.String(tableName),
-		KeyConditionExpression: aws.String(fmt.Sprintf("#%s = :%s", keyName, keyName)),
+		KeyConditionExpression: aws.String(fmt.Sprintf("#%s = :value", keyName)),
 		ExpressionAttributeValues: map[string]*dynamodb.AttributeValue{
-			":" + keyName: {
+			":value": {
 				S: aws.String(key),
 			},
+		},
+		ExpressionAttributeNames: map[string]*string{
+			"#" + keyName: aws.String(keyName),
 		},
 	})
 	if err != nil {
