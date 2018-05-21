@@ -1,3 +1,7 @@
+## 0.1.4 (May 21, 2018)
+
+  * Added cloudwatch PutMetrics.
+
 ## 0.1.3 (May 14, 2018)
 
   * Added dynamodb Get.
