@@ -24,6 +24,11 @@ func Emit(stream string, items interface{}) ([]*kinesis.PutRecordsResultEntry, e
 	if err != nil {
 		return nil, fmt.Errorf("could not create kinesis records: %s", err)
 	}
+
+	if len(records) <= 0 {
+		return nil, nil
+	}
+
 	batches := batchRecords(records)
 
 	results := make([]*kinesis.PutRecordsResultEntry, 0)

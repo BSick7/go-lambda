@@ -1,3 +1,7 @@
+## 0.1.5 (May 21, 2018)
+
+  * Fixed bug where trying to emit 0 items errors.
+
 ## 0.1.4 (May 21, 2018)
 
   * Added cloudwatch PutMetrics.
