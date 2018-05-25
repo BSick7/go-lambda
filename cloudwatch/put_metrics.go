@@ -8,11 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/cloudwatch"
 )
 
-type MetricDatum interface {
-	ToAWS() *cloudwatch.MetricDatum
-}
-
-func PutMetrics(namespace string, values []MetricDatum) error {
+func PutMetrics(namespace string, values []MetricPoint) error {
 	svc, err := services.NewCloudwatch()
 	if err != nil {
 		return fmt.Errorf("could not create cloudwatch service: %s", err)
