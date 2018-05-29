@@ -1,4 +1,4 @@
-package cloudwatch
+package metric
 
 import (
 	"fmt"
@@ -12,7 +12,7 @@ var (
 	maxMetricsPerPut = 20
 )
 
-func PutMetrics(namespace string, values []MetricPoint) error {
+func PutCloudwatch(namespace string, values []Point) error {
 	svc, err := services.NewCloudwatch()
 	if err != nil {
 		return fmt.Errorf("could not create cloudwatch service: %s", err)

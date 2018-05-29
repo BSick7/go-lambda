@@ -1,3 +1,7 @@
+## 0.2.0 (May 29, 2018)
+
+  * Rebuilt platform with better interface support using `context`.
+
 ## 0.1.6 (May 25, 2018)
 
   * Added cloudwatch metrics emitter.

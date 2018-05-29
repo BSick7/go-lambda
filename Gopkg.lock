@@ -8,8 +8,8 @@
     "lambda/messages",
     "lambdacontext"
   ]
-  revision = "fafa7e49388b8991caf99308e80655ba91816b72"
-  version = "v1.1.0"
+  revision = "4d30d0ff60440c2d0480a15747c96ee71c3c53d4"
+  version = "v1.2.0"
 
 [[projects]]
   name = "github.com/aws/aws-sdk-go"
@@ -39,11 +39,15 @@
     "private/protocol/query",
     "private/protocol/query/queryutil",
     "private/protocol/rest",
+    "private/protocol/restxml",
     "private/protocol/xml/xmlutil",
     "service/cloudwatch",
     "service/dynamodb",
     "service/dynamodb/dynamodbattribute",
     "service/kinesis",
+    "service/s3",
+    "service/s3/s3iface",
+    "service/s3/s3manager",
     "service/sts"
   ]
   revision = "236a3fce423171d03ae327a8aa2512e6fb24df36"
@@ -63,6 +67,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "f73d95cb45d7dbf51e2b81bd75062f9471595f33757dea3b09032c829c8555f9"
+  inputs-digest = "7176a74be9c2b3d6a8511d53bca1def7d56f2b5b20e55247b0b990541aa6a4f0"
   solver-name = "gps-cdcl"
   solver-version = 1
