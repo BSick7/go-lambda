@@ -1,4 +1,4 @@
-package cloudwatch
+package metric
 
 import (
 	"time"
@@ -7,25 +7,25 @@ import (
 	"github.com/aws/aws-sdk-go/service/cloudwatch"
 )
 
-type MetricPoint interface {
+type Point interface {
 	ToAWS() *cloudwatch.MetricDatum
 }
 
-func CountMetricPoint(name string, count int) MetricPoint {
-	return &countMetricPoint{
+func CountPoint(name string, count int) Point {
+	return &countPoint{
 		name:  name,
 		count: count,
 		t:     time.Now(),
 	}
 }
 
-type countMetricPoint struct {
+type countPoint struct {
 	name  string
 	count int
 	t     time.Time
 }
 
-func (p *countMetricPoint) ToAWS() *cloudwatch.MetricDatum {
+func (p *countPoint) ToAWS() *cloudwatch.MetricDatum {
 	return &cloudwatch.MetricDatum{
 		MetricName:        aws.String(p.name),
 		Value:             aws.Float64(float64(p.count)),
