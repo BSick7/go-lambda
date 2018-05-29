@@ -1,3 +1,7 @@
+## 0.2.1 (May 29, 2018)
+
+  * Configured `CountPoint` with correct `Unit` of measurement.
+
 ## 0.2.0 (May 29, 2018)
 
   * Rebuilt platform with better interface support using `context`.

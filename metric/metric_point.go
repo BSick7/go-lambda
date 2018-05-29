@@ -27,6 +27,7 @@ type countPoint struct {
 
 func (p *countPoint) ToAWS() *cloudwatch.MetricDatum {
 	return &cloudwatch.MetricDatum{
+		Unit:              aws.String("Count"),
 		MetricName:        aws.String(p.name),
 		Value:             aws.Float64(float64(p.count)),
 		StorageResolution: aws.Int64(1),
