@@ -17,3 +17,7 @@ func ContextSaver(ctx context.Context) Saver {
 	emitter, _ := ctx.Value(saverContextKey{}).(Saver)
 	return emitter
 }
+
+func WithSaver(ctx context.Context, s Saver) context.Context {
+	return context.WithValue(ctx, saverContextKey{}, s)
+}

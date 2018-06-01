@@ -13,7 +13,7 @@ type stdoutSaver struct {
 }
 
 func (s *stdoutSaver) Contextualize(ctx context.Context) context.Context {
-	return context.WithValue(ctx, saverContextKey{}, s)
+	return WithSaver(ctx, s)
 }
 
 func (s *stdoutSaver) Save(key string, data []byte) (string, error) {

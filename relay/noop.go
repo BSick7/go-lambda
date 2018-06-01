@@ -12,7 +12,7 @@ type noopEmitter struct {
 }
 
 func (e *noopEmitter) Contextualize(ctx context.Context) context.Context {
-	return context.WithValue(ctx, emitterContextKey{}, e)
+	return WithEmitter(ctx, e)
 }
 
 func (e *noopEmitter) Emit(items interface{}) (int, error) {

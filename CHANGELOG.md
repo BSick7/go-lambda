@@ -1,3 +1,7 @@
+## 0.2.2 (Jun 06, 2018)
+
+  * Added extensibility of contextual interfaces. 
+
 ## 0.2.1 (May 29, 2018)
 
   * Configured `CountPoint` with correct `Unit` of measurement.

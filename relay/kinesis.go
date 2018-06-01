@@ -17,7 +17,7 @@ type kinesisEmitter struct {
 }
 
 func (e *kinesisEmitter) Contextualize(ctx context.Context) context.Context {
-	return context.WithValue(ctx, emitterContextKey{}, e)
+	return WithEmitter(ctx, e)
 }
 
 func (e *kinesisEmitter) Emit(items interface{}) (int, error) {

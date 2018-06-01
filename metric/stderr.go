@@ -15,7 +15,7 @@ type stderrEmitter struct {
 }
 
 func (e *stderrEmitter) Contextualize(ctx context.Context) context.Context {
-	return context.WithValue(ctx, emitterContextKey{}, e)
+	return WithEmitter(ctx, e)
 }
 
 func (e *stderrEmitter) Add(point Point) {

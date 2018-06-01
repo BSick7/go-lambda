@@ -23,7 +23,7 @@ type s3Saver struct {
 }
 
 func (s *s3Saver) Contextualize(ctx context.Context) context.Context {
-	return context.WithValue(ctx, saverContextKey{}, s)
+	return WithSaver(ctx, s)
 }
 
 func (s *s3Saver) Save(key string, data []byte) (string, error) {

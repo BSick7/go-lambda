@@ -14,7 +14,7 @@ type cloudwatchEmitter struct {
 }
 
 func (e *cloudwatchEmitter) Contextualize(ctx context.Context) context.Context {
-	return context.WithValue(ctx, emitterContextKey{}, e)
+	return WithEmitter(ctx, e)
 }
 
 func (e *cloudwatchEmitter) Add(point Point) {

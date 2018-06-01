@@ -6,6 +6,11 @@ import (
 	"github.com/BSick7/go-lambda/scaffold"
 )
 
+type Emitter interface {
+	scaffold.Contextualizer
+	Emit(items interface{}) (int, error)
+}
+
 type emitterContextKey struct{}
 
 func ContextEmitter(ctx context.Context) Emitter {
@@ -13,7 +18,6 @@ func ContextEmitter(ctx context.Context) Emitter {
 	return emitter
 }
 
-type Emitter interface {
-	scaffold.Contextualizer
-	Emit(items interface{}) (int, error)
+func WithEmitter(ctx context.Context, e Emitter) context.Context {
+	return context.WithValue(ctx, emitterContextKey{}, e)
 }
