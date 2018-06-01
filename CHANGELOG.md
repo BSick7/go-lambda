@@ -1,3 +1,7 @@
+## 0.2.3 (Jun 06, 2018)
+
+  * Added noop interfaces
+
 ## 0.2.2 (Jun 06, 2018)
 
   * Added extensibility of contextual interfaces. 
