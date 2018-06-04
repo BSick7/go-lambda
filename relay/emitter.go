@@ -8,7 +8,8 @@ import (
 
 type Emitter interface {
 	scaffold.Contextualizer
-	Emit(items interface{}) (int, error)
+	Emit(item interface{}) error
+	Flush() error
 }
 
 type emitterContextKey struct{}

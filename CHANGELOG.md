@@ -1,8 +1,12 @@
-## 0.2.3 (Jun 06, 2018)
+## 0.3.0 (Jun 04, 2018)
+
+  * Converted relay emitter to on-the-fly.
+
+## 0.2.3 (Jun 01, 2018)
 
   * Added noop interfaces
 
-## 0.2.2 (Jun 06, 2018)
+## 0.2.2 (Jun 01, 2018)
 
   * Added extensibility of contextual interfaces. 
 
