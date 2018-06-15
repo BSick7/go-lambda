@@ -1,3 +1,7 @@
+## 0.3.1 (Jun 15, 2018)
+
+  * Added configuration option to results Saver `AlwaysSave`.
+
 ## 0.3.0 (Jun 04, 2018)
 
   * Converted relay emitter to on-the-fly.

@@ -5,11 +5,12 @@ import (
 	"fmt"
 )
 
-func NewStdoutSaver() Saver {
-	return &stdoutSaver{}
+func NewStdoutSaver(alwaysSave bool) Saver {
+	return &stdoutSaver{alwaysSave: alwaysSave}
 }
 
 type stdoutSaver struct {
+	alwaysSave bool
 }
 
 func (s *stdoutSaver) Contextualize(ctx context.Context) context.Context {
@@ -19,4 +20,8 @@ func (s *stdoutSaver) Contextualize(ctx context.Context) context.Context {
 func (s *stdoutSaver) Save(key string, data []byte) (string, error) {
 	fmt.Printf("%s:\n%s\n", key, string(data))
 	return "", nil
+}
+
+func (s *stdoutSaver) AlwaysSave() bool {
+	return s.alwaysSave
 }

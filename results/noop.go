@@ -12,3 +12,4 @@ type noopSaver struct{}
 
 func (s *noopSaver) Contextualize(ctx context.Context) context.Context { return WithSaver(ctx, s) }
 func (s *noopSaver) Save(key string, data []byte) (string, error)      { return "", nil }
+func (s *noopSaver) AlwaysSave() bool                                  { return false }

@@ -9,6 +9,7 @@ import (
 type Saver interface {
 	scaffold.Contextualizer
 	Save(key string, data []byte) (string, error)
+	AlwaysSave() bool
 }
 
 type saverContextKey struct{}

@@ -50,3 +50,7 @@ func (s *s3Saver) Save(key string, data []byte) (string, error) {
 	return out.Location, nil
 
 }
+
+func (s *s3Saver) AlwaysSave() bool {
+	return false
+}
