@@ -3,12 +3,10 @@ package relay
 import (
 	"context"
 	"fmt"
-	"net/url"
 	"sync"
 
 	"github.com/BSick7/go-lambda/services"
 	"github.com/olivere/elastic"
-	"net/http"
 )
 
 type ElasticsearchIndexer struct {
@@ -18,21 +16,19 @@ type ElasticsearchIndexer struct {
 	BodyJson func(item interface{}) interface{}
 }
 
-func NewElasticsearchEmitter(endpointUrl string, useAwsRequestSigning bool, indexer ElasticsearchIndexer) Emitter {
+func NewElasticsearchEmitter(cfg services.ElasticsearchConfig, indexer ElasticsearchIndexer) Emitter {
 	return &elasticsearchEmitter{
-		endpointUrl:          endpointUrl,
-		useAwsRequestSigning: useAwsRequestSigning,
-		indexer:              indexer,
-		items:                map[string][]elastic.BulkableRequest{},
+		cfg:     cfg,
+		indexer: indexer,
+		items:   map[string][]elastic.BulkableRequest{},
 	}
 }
 
 type elasticsearchEmitter struct {
-	endpointUrl          string
-	useAwsRequestSigning bool
-	indexer              ElasticsearchIndexer
-	client               *elastic.Client
-	items                map[string][]elastic.BulkableRequest
+	cfg     services.ElasticsearchConfig
+	indexer ElasticsearchIndexer
+	client  *elastic.Client
+	items   map[string][]elastic.BulkableRequest
 	sync.Mutex
 }
 
@@ -81,8 +77,15 @@ func (e *elasticsearchEmitter) Flush() error {
 		e.items = map[string][]elastic.BulkableRequest{}
 	}()
 
+	ctx := context.Background()
+	if e.cfg.RequestTimeout > 0 {
+		var cancel context.CancelFunc
+		ctx, cancel = context.WithTimeout(context.Background(), e.cfg.RequestTimeout)
+		defer cancel()
+	}
+
 	for _, bulk := range bulks {
-		if _, err := bulk.Do(context.Background()); err != nil {
+		if _, err := bulk.Do(ctx); err != nil {
 			return err
 		}
 	}
@@ -97,35 +100,16 @@ func (e *elasticsearchEmitter) init() error {
 		return nil
 	}
 
-	httpClient, err := e.getHttpClient()
+	opts, err := e.cfg.ClientOptions()
 	if err != nil {
-		return fmt.Errorf("error creating elasticsearch http client: %s", err)
+		return err
 	}
+	opts = append(opts, elastic.SetSniff(false))
 
-	scheme := ""
-	if u, err := url.Parse(e.endpointUrl); err == nil {
-		scheme = u.Scheme
-	}
-	if scheme == "" {
-		scheme = "https"
-	}
-
-	client, err := elastic.NewClient(
-		elastic.SetURL(e.endpointUrl),
-		elastic.SetScheme(scheme),
-		elastic.SetSniff(false),
-		elastic.SetHttpClient(httpClient),
-	)
+	client, err := elastic.NewClient(opts...)
 	if err != nil {
 		return fmt.Errorf("error creating elasticsearch client: %s", err)
 	}
 	e.client = client
 	return nil
-}
-
-func (e *elasticsearchEmitter) getHttpClient() (*http.Client, error) {
-	if e.useAwsRequestSigning {
-		return services.NewAwsSigningHttpClient()
-	}
-	return http.DefaultClient, nil
 }
