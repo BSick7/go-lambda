@@ -3,10 +3,12 @@ package relay
 import (
 	"context"
 	"fmt"
+	"net/url"
 	"sync"
 
 	"github.com/BSick7/go-lambda/services"
 	"github.com/olivere/elastic"
+	"net/http"
 )
 
 type ElasticsearchIndexer struct {
@@ -16,17 +18,19 @@ type ElasticsearchIndexer struct {
 	BodyJson func(item interface{}) interface{}
 }
 
-func NewElasticsearchEmitter(endpoint string, indexer ElasticsearchIndexer) Emitter {
+func NewElasticsearchEmitter(endpointUrl string, useAwsRequestSigning bool, indexer ElasticsearchIndexer) Emitter {
 	return &elasticsearchEmitter{
-		endpoint: endpoint,
-		indexer:  indexer,
+		endpointUrl:          endpointUrl,
+		useAwsRequestSigning: useAwsRequestSigning,
+		indexer:              indexer,
 	}
 }
 
 type elasticsearchEmitter struct {
-	endpoint string
-	indexer  ElasticsearchIndexer
-	client   *elastic.Client
+	endpointUrl          string
+	useAwsRequestSigning bool
+	indexer              ElasticsearchIndexer
+	client               *elastic.Client
 	sync.Mutex
 }
 
@@ -67,14 +71,22 @@ func (e *elasticsearchEmitter) init() error {
 		return nil
 	}
 
-	httpClient, err := services.NewAwsSigningHttpClient()
+	httpClient, err := e.getHttpClient()
 	if err != nil {
-		return err
+		return fmt.Errorf("error creating elasticsearch http client: %s", err)
+	}
+
+	scheme := ""
+	if u, err := url.Parse(e.endpointUrl); err == nil {
+		scheme = u.Scheme
+	}
+	if scheme == "" {
+		scheme = "https"
 	}
 
 	client, err := elastic.NewClient(
-		elastic.SetURL(e.endpoint),
-		elastic.SetScheme("https"),
+		elastic.SetURL(e.endpointUrl),
+		elastic.SetScheme(scheme),
 		elastic.SetSniff(false),
 		elastic.SetHttpClient(httpClient),
 	)
@@ -83,4 +95,11 @@ func (e *elasticsearchEmitter) init() error {
 	}
 	e.client = client
 	return nil
+}
+
+func (e *elasticsearchEmitter) getHttpClient() (*http.Client, error) {
+	if e.useAwsRequestSigning {
+		return services.NewAwsSigningHttpClient()
+	}
+	return http.DefaultClient, nil
 }
