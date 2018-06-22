@@ -10,7 +10,7 @@ type multiEmitter struct {
 	Emitters []Emitter
 }
 
-func NewMultiEmitter(emitters []Emitter) Emitter {
+func NewMultiEmitter(emitters ...Emitter) Emitter {
 	return &multiEmitter{
 		Emitters: emitters,
 	}
