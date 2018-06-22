@@ -10,9 +10,10 @@ import (
 )
 
 type ElasticsearchIndexer struct {
-	Index func(item interface{}) string
-	Type  func(item interface{}) *string
-	Id    func(item interface{}) *string
+	Index    func(item interface{}) string
+	Type     func(item interface{}) *string
+	Id       func(item interface{}) *string
+	BodyJson func(item interface{}) interface{}
 }
 
 func NewElasticsearchEmitter(endpoint string, indexer ElasticsearchIndexer) Emitter {
@@ -40,7 +41,7 @@ func (e *elasticsearchEmitter) Emit(item interface{}) error {
 
 	svc := e.client.Index().
 		Index(e.indexer.Index(item)).
-		BodyJson(item)
+		BodyJson(e.indexer.BodyJson(item))
 
 	if indextype := e.indexer.Type(item); indextype != nil {
 		svc = svc.Type(*indextype)
