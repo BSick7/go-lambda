@@ -64,9 +64,15 @@
   packages = ["."]
   revision = "0b12d6b5"
 
+[[projects]]
+  branch = "master"
+  name = "github.com/sha1sum/aws_signing_client"
+  packages = ["."]
+  revision = "9088e4c7b34b3174ae879fc975deb18ac62ac8d3"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "7176a74be9c2b3d6a8511d53bca1def7d56f2b5b20e55247b0b990541aa6a4f0"
+  inputs-digest = "72e680a3e2af8d7e276ff9eb5d24129f1bdfa99824dad811ac1d781a1ce1cadf"
   solver-name = "gps-cdcl"
   solver-version = 1
