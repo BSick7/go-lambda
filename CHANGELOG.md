@@ -1,3 +1,8 @@
+## 0.3.2 (Unreleased)
+
+  * Added relay `NewMultiEmitter`.
+  * Added relay `NewElasticsearchEmitter`.
+
 ## 0.3.1 (Jun 15, 2018)
 
   * Added configuration option to results Saver `AlwaysSave`.

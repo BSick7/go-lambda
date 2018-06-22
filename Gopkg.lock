@@ -64,9 +64,42 @@
   packages = ["."]
   revision = "0b12d6b5"
 
+[[projects]]
+  branch = "master"
+  name = "github.com/mailru/easyjson"
+  packages = [
+    ".",
+    "buffer",
+    "jlexer",
+    "jwriter"
+  ]
+  revision = "3fdea8d05856a0c8df22ed4bc71b3219245e4485"
+
+[[projects]]
+  name = "github.com/olivere/elastic"
+  packages = [
+    ".",
+    "config",
+    "uritemplates"
+  ]
+  revision = "dabcc5de0a3fd6313870c223c3119e2b1e942ba3"
+  version = "v6.1.23"
+
+[[projects]]
+  name = "github.com/pkg/errors"
+  packages = ["."]
+  revision = "645ef00459ed84a119197bfb8d8205042c6df63d"
+  version = "v0.8.0"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/sha1sum/aws_signing_client"
+  packages = ["."]
+  revision = "9088e4c7b34b3174ae879fc975deb18ac62ac8d3"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "7176a74be9c2b3d6a8511d53bca1def7d56f2b5b20e55247b0b990541aa6a4f0"
+  inputs-digest = "f08208418093356156c43e894f40227c05a89d251de4ae9e0c0b9e4225e3b7aa"
   solver-name = "gps-cdcl"
   solver-version = 1
