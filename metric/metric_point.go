@@ -3,12 +3,12 @@ package metric
 import (
 	"time"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/service/cloudwatch"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/cloudwatch"
 )
 
 type Point interface {
-	ToAWS() *cloudwatch.MetricDatum
+	ToAWS() cloudwatch.MetricDatum
 }
 
 func CountPoint(name string, count int) Point {
@@ -25,9 +25,9 @@ type countPoint struct {
 	t     time.Time
 }
 
-func (p *countPoint) ToAWS() *cloudwatch.MetricDatum {
-	return &cloudwatch.MetricDatum{
-		Unit:              aws.String("Count"),
+func (p *countPoint) ToAWS() cloudwatch.MetricDatum {
+	return cloudwatch.MetricDatum{
+		Unit:              cloudwatch.StandardUnitCount,
 		MetricName:        aws.String(p.name),
 		Value:             aws.Float64(float64(p.count)),
 		StorageResolution: aws.Int64(1),

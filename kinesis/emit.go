@@ -6,15 +6,15 @@ import (
 	"reflect"
 
 	"github.com/BSick7/go-lambda/services"
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/service/kinesis"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/kinesis"
 )
 
 // Emit a slice of data to a kinesis stream
 // This will convert the data into record entries and emit properly
 // By default, the partition key is not set
 // If an item implements Partitioner, partition key will be retrieved accordingly
-func Emit(stream string, items interface{}) ([]*kinesis.PutRecordsResultEntry, error) {
+func Emit(stream string, items interface{}) ([]kinesis.PutRecordsResultEntry, error) {
 	svc, err := services.NewKinesis()
 	if err != nil {
 		return nil, fmt.Errorf("could not create kinesis service: %s", err)
@@ -31,12 +31,12 @@ func Emit(stream string, items interface{}) ([]*kinesis.PutRecordsResultEntry, e
 
 	batches := batchRecords(records)
 
-	results := make([]*kinesis.PutRecordsResultEntry, 0)
+	results := make([]kinesis.PutRecordsResultEntry, 0)
 	for _, batch := range batches {
-		out, err := svc.PutRecords(&kinesis.PutRecordsInput{
+		out, err := svc.PutRecordsRequest(&kinesis.PutRecordsInput{
 			StreamName: aws.String(stream),
 			Records:    batch,
-		})
+		}).Send()
 		if err != nil {
 			return nil, fmt.Errorf("could not put kinesis records to %q: %s", stream, err)
 		}
@@ -45,7 +45,7 @@ func Emit(stream string, items interface{}) ([]*kinesis.PutRecordsResultEntry, e
 	return results, nil
 }
 
-func buildRecords(items interface{}) ([]*kinesis.PutRecordsRequestEntry, error) {
+func buildRecords(items interface{}) ([]kinesis.PutRecordsRequestEntry, error) {
 	t, s := reflect.TypeOf(items).Kind(), reflect.ValueOf(items)
 	switch t {
 	default:
@@ -53,12 +53,12 @@ func buildRecords(items interface{}) ([]*kinesis.PutRecordsRequestEntry, error) 
 	case reflect.Slice:
 	}
 
-	records := make([]*kinesis.PutRecordsRequestEntry, s.Len())
+	records := make([]kinesis.PutRecordsRequestEntry, s.Len())
 	for i := 0; i < s.Len(); i++ {
 		item := s.Index(i).Interface()
 		partitionKey := getPartitionKey(item)
 		raw, _ := json.Marshal(item)
-		records[i] = &kinesis.PutRecordsRequestEntry{
+		records[i] = kinesis.PutRecordsRequestEntry{
 			Data:         raw,
 			PartitionKey: partitionKey,
 		}
@@ -72,14 +72,14 @@ var maxRequestSize = 5 * 1024 * 1024
 //   request <= 500 records
 //   request <= 5MB
 //   record  <= 1MB
-func batchRecords(records []*kinesis.PutRecordsRequestEntry) [][]*kinesis.PutRecordsRequestEntry {
-	batches := make([][]*kinesis.PutRecordsRequestEntry, 0)
-	cur := make([]*kinesis.PutRecordsRequestEntry, 0)
+func batchRecords(records []kinesis.PutRecordsRequestEntry) [][]kinesis.PutRecordsRequestEntry {
+	batches := make([][]kinesis.PutRecordsRequestEntry, 0)
+	cur := make([]kinesis.PutRecordsRequestEntry, 0)
 	size := 0
 	for _, record := range records {
 		if len(cur) >= 500 || (size+len(record.Data)) > maxRequestSize {
 			batches = append(batches, cur)
-			cur = make([]*kinesis.PutRecordsRequestEntry, 0)
+			cur = make([]kinesis.PutRecordsRequestEntry, 0)
 			size = 0
 		}
 		cur = append(cur, record)

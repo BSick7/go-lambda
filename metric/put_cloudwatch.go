@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"github.com/BSick7/go-lambda/services"
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/service/cloudwatch"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/cloudwatch"
 )
 
 var (
@@ -18,27 +18,27 @@ func PutCloudwatch(namespace string, values []Point) error {
 		return fmt.Errorf("could not create cloudwatch service: %s", err)
 	}
 
-	batch := make([]*cloudwatch.MetricDatum, 0)
+	batch := make([]cloudwatch.MetricDatum, 0)
 	for _, item := range values {
 		if len(batch) >= maxMetricsPerPut {
-			input := &cloudwatch.PutMetricDataInput{
+			req := svc.PutMetricDataRequest(&cloudwatch.PutMetricDataInput{
 				Namespace:  aws.String(namespace),
 				MetricData: batch,
-			}
-			if _, err := svc.PutMetricData(input); err != nil {
+			})
+			if _, err := req.Send(); err != nil {
 				return err
 			}
-			batch = []*cloudwatch.MetricDatum{item.ToAWS()}
+			batch = []cloudwatch.MetricDatum{item.ToAWS()}
 		} else {
 			batch = append(batch, item.ToAWS())
 		}
 	}
 	if len(batch) > 0 {
-		input := &cloudwatch.PutMetricDataInput{
+		req := svc.PutMetricDataRequest(&cloudwatch.PutMetricDataInput{
 			Namespace:  aws.String(namespace),
 			MetricData: batch,
-		}
-		_, err := svc.PutMetricData(input)
+		})
+		_, err := req.Send()
 		return err
 	}
 	return nil

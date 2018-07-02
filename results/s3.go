@@ -4,12 +4,10 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"os"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/credentials"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/s3/s3manager"
+	"github.com/BSick7/go-lambda/services"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/s3/s3manager"
 )
 
 func NewS3Saver(bucket string) Saver {
@@ -27,17 +25,12 @@ func (s *s3Saver) Contextualize(ctx context.Context) context.Context {
 }
 
 func (s *s3Saver) Save(key string, data []byte) (string, error) {
-	conf := aws.NewConfig()
-	if region := os.Getenv("AWS_REGION"); region != "" {
-		conf.WithRegion(region)
-	}
-	conf.WithCredentials(credentials.NewEnvCredentials())
-	ses, err := session.NewSession(conf)
+	cfg, err := services.DefaultConfig()
 	if err != nil {
 		return "", err
 	}
 
-	uploader := s3manager.NewUploader(ses)
+	uploader := s3manager.NewUploader(cfg)
 	out, err := uploader.Upload(&s3manager.UploadInput{
 		Bucket:      aws.String(s.bucket),
 		Key:         aws.String(key),

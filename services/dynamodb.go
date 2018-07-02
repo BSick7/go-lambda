@@ -1,13 +1,13 @@
 package services
 
 import (
-	"github.com/aws/aws-sdk-go/service/dynamodb"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 )
 
 func NewDynamoDB() (*dynamodb.DynamoDB, error) {
-	s, err := NewSession()
+	cfg, err := DefaultConfig()
 	if err != nil {
 		return nil, err
 	}
-	return dynamodb.New(s), nil
+	return dynamodb.New(cfg), nil
 }

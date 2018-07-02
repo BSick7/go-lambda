@@ -1,4 +1,8 @@
-## 0.3.2 (Unreleased)
+## 0.4.0 (Jul 02, 2018)
+
+  * Upgraded aws-sdk to v2.
+
+## 0.3.2 (Jun 22, 2018)
 
   * Added relay `NewMultiEmitter`.
   * Added relay `NewElasticsearchEmitter`.

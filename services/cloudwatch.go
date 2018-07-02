@@ -1,13 +1,13 @@
 package services
 
 import (
-	"github.com/aws/aws-sdk-go/service/cloudwatch"
+	"github.com/aws/aws-sdk-go-v2/service/cloudwatch"
 )
 
 func NewCloudwatch() (*cloudwatch.CloudWatch, error) {
-	s, err := NewSession()
+	cfg, err := DefaultConfig()
 	if err != nil {
 		return nil, err
 	}
-	return cloudwatch.New(s), nil
+	return cloudwatch.New(cfg), nil
 }

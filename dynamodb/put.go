@@ -4,9 +4,9 @@ import (
 	"fmt"
 
 	"github.com/BSick7/go-lambda/services"
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/service/dynamodb"
-	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb/dynamodbattribute"
 )
 
 func Put(tableName string, item interface{}) error {
@@ -20,9 +20,10 @@ func Put(tableName string, item interface{}) error {
 		return fmt.Errorf("could not create dynamo db service: %s", err)
 	}
 
-	_, err = svc.PutItem(&dynamodb.PutItemInput{
+	req := svc.PutItemRequest(&dynamodb.PutItemInput{
 		TableName: aws.String(tableName),
 		Item:      vals,
 	})
+	_, err = req.Send()
 	return err
 }
