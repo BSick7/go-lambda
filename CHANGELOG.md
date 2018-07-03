@@ -1,3 +1,7 @@
+## 0.4.1 (Jul 03, 2018)
+
+  * Added DurationPoint for cloudwatch metrics.
+
 ## 0.4.0 (Jul 02, 2018)
 
   * Upgraded aws-sdk to v2.

@@ -7,10 +7,6 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/cloudwatch"
 )
 
-type Point interface {
-	ToAWS() cloudwatch.MetricDatum
-}
-
 func CountPoint(name string, count int) Point {
 	return &countPoint{
 		name:  name,
