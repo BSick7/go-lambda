@@ -1,3 +1,9 @@
+## 0.4.2 (Jul 04, 2018)
+
+  * Expanded metrics to include dimensions.
+  * Added SetResolution to Point.
+  * Defaulted Point to low resolution.
+
 ## 0.4.1 (Jul 03, 2018)
 
   * Added DurationPoint for cloudwatch metrics.

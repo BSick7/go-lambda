@@ -7,26 +7,25 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/cloudwatch"
 )
 
-func CountPoint(name string, count int) Point {
+func CountPoint(name string, count int, dimensions ...Dimension) Point {
 	return &countPoint{
-		name:  name,
+		basePoint: basePoint{
+			name:       name,
+			unit:       cloudwatch.StandardUnitCount,
+			timestamp:  time.Now(),
+			dimensions: dimensions,
+		},
 		count: count,
-		t:     time.Now(),
 	}
 }
 
 type countPoint struct {
-	name  string
+	basePoint
 	count int
-	t     time.Time
 }
 
 func (p *countPoint) ToAWS() cloudwatch.MetricDatum {
-	return cloudwatch.MetricDatum{
-		Unit:              cloudwatch.StandardUnitCount,
-		MetricName:        aws.String(p.name),
-		Value:             aws.Float64(float64(p.count)),
-		StorageResolution: aws.Int64(1),
-		Timestamp:         aws.Time(p.t),
-	}
+	md := p.basePoint.ToAWS()
+	md.Value = aws.Float64(float64(p.count))
+	return md
 }

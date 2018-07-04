@@ -5,5 +5,11 @@ import (
 )
 
 type Point interface {
+	SetResolution(resolution int64) Point
 	ToAWS() cloudwatch.MetricDatum
+}
+
+type PointMarker interface {
+	Point
+	Mark()
 }
