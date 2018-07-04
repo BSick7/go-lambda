@@ -18,22 +18,10 @@ func PutCloudwatch(namespace string, values []Point) error {
 		return fmt.Errorf("could not create cloudwatch service: %s", err)
 	}
 
-	batch := make([]cloudwatch.MetricDatum, 0)
-	for _, item := range values {
-		if len(batch) >= maxMetricsPerPut {
-			req := svc.PutMetricDataRequest(&cloudwatch.PutMetricDataInput{
-				Namespace:  aws.String(namespace),
-				MetricData: batch,
-			})
-			if _, err := req.Send(); err != nil {
-				return err
-			}
-			batch = []cloudwatch.MetricDatum{item.ToAWS()}
-		} else {
-			batch = append(batch, item.ToAWS())
+	flush := func(batch []cloudwatch.MetricDatum) error {
+		if len(batch) <= 0 {
+			return nil
 		}
-	}
-	if len(batch) > 0 {
 		req := svc.PutMetricDataRequest(&cloudwatch.PutMetricDataInput{
 			Namespace:  aws.String(namespace),
 			MetricData: batch,
@@ -41,5 +29,16 @@ func PutCloudwatch(namespace string, values []Point) error {
 		_, err := req.Send()
 		return err
 	}
-	return nil
+
+	batch := make([]cloudwatch.MetricDatum, 0)
+	for _, item := range values {
+		batch = append(batch, item.ToAWS())
+		if len(batch) >= maxMetricsPerPut {
+			if err := flush(batch); err != nil {
+				return err
+			}
+			batch = make([]cloudwatch.MetricDatum, 0)
+		}
+	}
+	return flush(batch)
 }

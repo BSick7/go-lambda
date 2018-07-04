@@ -2,7 +2,10 @@ package metric
 
 import (
 	"context"
+	"encoding/json"
 	"log"
+
+	"github.com/aws/aws-sdk-go-v2/service/cloudwatch"
 )
 
 func NewStderrEmitter(namespace string) Emitter {
@@ -23,6 +26,11 @@ func (e *stderrEmitter) Add(point Point) {
 }
 
 func (e *stderrEmitter) Flush() error {
-	log.Println(e.namespace, e.points)
+	pts := make([]cloudwatch.MetricDatum, 0)
+	for _, point := range e.points {
+		pts = append(pts, point.ToAWS())
+	}
+	raw, _ := json.Marshal(pts)
+	log.Println(e.namespace, string(raw))
 	return nil
 }

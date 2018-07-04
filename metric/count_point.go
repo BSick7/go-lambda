@@ -9,23 +9,23 @@ import (
 
 func CountPoint(name string, count int, dimensions ...Dimension) Point {
 	return &countPoint{
-		basePoint: basePoint{
-			name:       name,
-			unit:       cloudwatch.StandardUnitCount,
-			timestamp:  time.Now(),
-			dimensions: dimensions,
+		BasePoint: BasePoint{
+			Name:       name,
+			Unit:       cloudwatch.StandardUnitCount,
+			Timestamp:  time.Now(),
+			Dimensions: dimensions,
 		},
-		count: count,
+		Count: count,
 	}
 }
 
 type countPoint struct {
-	basePoint
-	count int
+	BasePoint
+	Count int
 }
 
 func (p *countPoint) ToAWS() cloudwatch.MetricDatum {
-	md := p.basePoint.ToAWS()
-	md.Value = aws.Float64(float64(p.count))
+	md := p.BasePoint.ToAWS()
+	md.Value = aws.Float64(float64(p.Count))
 	return md
 }

@@ -7,25 +7,25 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/cloudwatch"
 )
 
-type basePoint struct {
-	name       string
-	unit       cloudwatch.StandardUnit
-	dimensions Dimensions
-	resolution *int64
-	timestamp  time.Time
+type BasePoint struct {
+	Name       string
+	Unit       cloudwatch.StandardUnit
+	Dimensions Dimensions
+	Resolution *int64
+	Timestamp  time.Time
 }
 
-func (p *basePoint) SetResolution(resolution int64) Point {
-	p.resolution = &resolution
+func (p *BasePoint) SetResolution(resolution int64) Point {
+	p.Resolution = &resolution
 	return p
 }
 
-func (p *basePoint) ToAWS() cloudwatch.MetricDatum {
+func (p *BasePoint) ToAWS() cloudwatch.MetricDatum {
 	return cloudwatch.MetricDatum{
-		MetricName:        aws.String(p.name),
-		Timestamp:         aws.Time(p.timestamp),
-		Dimensions:        p.dimensions.ToAWS(),
-		StorageResolution: p.resolution,
-		Unit:              p.unit,
+		MetricName:        aws.String(p.Name),
+		Timestamp:         aws.Time(p.Timestamp),
+		Dimensions:        p.Dimensions.ToAWS(),
+		StorageResolution: p.Resolution,
+		Unit:              p.Unit,
 	}
 }
