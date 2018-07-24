@@ -34,13 +34,13 @@
   version = "1.2.0"
 
 [[constraint]]
-  branch = "master"
-  name = "github.com/BSick7/aws_signing_client"
-
-[[constraint]]
   name = "github.com/olivere/elastic"
   version = "6.1.23"
 
 [[constraint]]
   name = "github.com/aws/aws-sdk-go-v2"
   version = "2.0.0-preview.4"
+
+[[constraint]]
+  name = "github.com/BSick7/aws-signing"
+  version = "0.2.0"

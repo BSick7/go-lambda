@@ -2,10 +2,10 @@
 
 
 [[projects]]
-  branch = "master"
-  name = "github.com/BSick7/aws_signing_client"
-  packages = ["."]
-  revision = "90d58a70978dbdd3d482e067bd5e95c28f5beb40"
+  name = "github.com/BSick7/aws-signing"
+  packages = ["signing"]
+  revision = "9c293f6320b11fa99c83b0393e193b04a3987c22"
+  version = "0.2.0"
 
 [[projects]]
   name = "github.com/aws/aws-lambda-go"
@@ -56,8 +56,8 @@
 [[projects]]
   name = "github.com/go-ini/ini"
   packages = ["."]
-  revision = "06f5f3d67269ccec1fe5fe4134ba6e982984f7f5"
-  version = "v1.37.0"
+  revision = "358ee7663966325963d4e8b2e1fbd570c5195153"
+  version = "v1.38.1"
 
 [[projects]]
   name = "github.com/jmespath/go-jmespath"
@@ -73,7 +73,7 @@
     "jlexer",
     "jwriter"
   ]
-  revision = "3fdea8d05856a0c8df22ed4bc71b3219245e4485"
+  revision = "d5012789d6659eeed305f54c1b1542e7b65829e6"
 
 [[projects]]
   name = "github.com/olivere/elastic"
@@ -82,8 +82,8 @@
     "config",
     "uritemplates"
   ]
-  revision = "d06c9338b70fa11ac48eb82d8a84090a8d7dfd8d"
-  version = "v6.1.24"
+  revision = "229adca7643e572e471ea3e8e018d651b728713d"
+  version = "v6.1.25"
 
 [[projects]]
   name = "github.com/pkg/errors"
@@ -94,6 +94,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "9fa2933027e43c25c99cd27262f7c0a30863b19f5162d7ab8c2869e54f09551e"
+  inputs-digest = "7d0e4517e34e90db3648d7bd0012b7c5584c31e1f414bee12c55d0b6788a0fe6"
   solver-name = "gps-cdcl"
   solver-version = 1

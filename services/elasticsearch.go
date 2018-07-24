@@ -2,9 +2,12 @@ package services
 
 import (
 	"fmt"
+	"net/http"
 	"net/url"
 	"time"
 
+	"github.com/BSick7/aws-signing/signing"
+	"github.com/aws/aws-sdk-go-v2/aws/signer/v4"
 	"github.com/olivere/elastic"
 )
 
@@ -29,11 +32,13 @@ func (c ElasticsearchConfig) ClientOptions() ([]elastic.ClientOptionFunc, error)
 		elastic.SetScheme(c.Scheme()),
 	}
 	if c.UseAwsRequestSigning {
-		if httpClient, err := NewAwsSigningHttpClient(); err != nil {
-			return nil, fmt.Errorf("error creating elasticsearch http client: %s", err)
-		} else {
-			opts = append(opts, elastic.SetHttpClient(httpClient))
+		cfg, err := DefaultConfig()
+		if err != nil {
+			return nil, fmt.Errorf("error creating aws configuration: %s", err)
 		}
+		signer := v4.NewSigner(cfg.Credentials)
+		httpClient := &http.Client{Transport: signing.NewTransport(signer, "es", cfg.Region)}
+		opts = append(opts, elastic.SetHttpClient(httpClient))
 	}
 	return opts, nil
 }

@@ -1,6 +1,7 @@
-## 0.4.3 (Unreleased)
+## 0.5.0 (Unreleased)
 
   * Created metric multiemitter to allow multiple sources.
+  * Removed aws signing client (use aws-signing instead).
 
 ## 0.4.2 (Jul 04, 2018)
 
