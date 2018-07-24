@@ -1,3 +1,7 @@
+## 0.4.3 (Unreleased)
+
+  * Created metric multiemitter to allow multiple sources.
+
 ## 0.4.2 (Jul 04, 2018)
 
   * Expanded metrics to include dimensions.
