@@ -1,3 +1,7 @@
+## 0.5.1 (Jul 25, 2018)
+
+  * Added macro for easy reporting of function duration.
+
 ## 0.5.0 (Jul 25, 2018)
 
   * Created metric multiemitter to allow multiple sources.
