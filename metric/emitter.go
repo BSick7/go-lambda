@@ -2,6 +2,7 @@ package metric
 
 import (
 	"context"
+	"log"
 
 	"github.com/BSick7/go-lambda/scaffold"
 )
@@ -21,4 +22,10 @@ func ContextEmitter(ctx context.Context) Emitter {
 
 func WithEmitter(ctx context.Context, e Emitter) context.Context {
 	return context.WithValue(ctx, emitterContextKey{}, e)
+}
+
+func FlushAndLog(emitter Emitter) {
+	if err := emitter.Flush(); err != nil {
+		log.Println(err)
+	}
 }
