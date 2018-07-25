@@ -10,7 +10,7 @@ import (
 
 // NewDatadogEmitter creates an emitter that publishes custom metrics to datadog via API
 func NewDatadogEmitter(apiKey, namespace string) Emitter {
-	return &datadogEmitter{namespace: namespace}
+	return &datadogEmitter{apiKey: apiKey, namespace: namespace}
 }
 
 type datadogEmitter struct {
@@ -38,7 +38,7 @@ func (e *datadogEmitter) Flush() error {
 }
 
 func (e *datadogEmitter) url() string {
-	return fmt.Sprintf("https://api.dat adoghq.com/api/v1/series?api_key=%s", e.apiKey)
+	return fmt.Sprintf("https://api.datadoghq.com/api/v1/series?api_key=%s", e.apiKey)
 }
 
 type datadogPost struct {
