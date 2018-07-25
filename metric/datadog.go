@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 )
 
 // NewDatadogEmitter creates an emitter that publishes custom metrics to datadog via API
@@ -30,7 +31,7 @@ func (e *datadogEmitter) Add(point *Point) {
 func (e *datadogEmitter) Flush() error {
 	body := datadogPost{Series: []datadogMetric{}}
 	for _, point := range e.points {
-		body.Series = append(body.Series, toDatadogMetric(point))
+		body.Series = append(body.Series, toDatadogMetric(e.namespace, point))
 	}
 	raw, _ := json.Marshal(body)
 	_, err := http.Post(e.url(), "application/json", bytes.NewBuffer(raw))
@@ -57,14 +58,17 @@ var datadogMetricTypes = map[string]string{
 	"Microseconds": "microsecond",
 }
 
-func toDatadogMetric(point *Point) datadogMetric {
+func toDatadogMetric(namespace string, point *Point) datadogMetric {
 	tags := make([]string, 0)
 	for n, v := range point.Tags {
 		tags = append(tags, fmt.Sprintf("%s:%s", n, v))
 	}
-
+	metric := strings.Replace(point.Metric, "-", ".", -1)
+	if namespace != "" {
+		metric = fmt.Sprintf("%s.%s", namespace, metric)
+	}
 	return datadogMetric{
-		Metric: point.Metric,
+		Metric: metric,
 		Unit:   datadogMetricTypes[point.Unit],
 		Tags:   tags,
 		Points: [][]float64{
