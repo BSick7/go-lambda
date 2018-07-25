@@ -3,6 +3,7 @@
   * Created metric multiemitter to allow multiple sources.
   * Removed aws signing client (use aws-signing instead).
   * Rebuilt metrics to be more generic.
+  * Added datadog metric emitter.
 
 ## 0.4.2 (Jul 04, 2018)
 
