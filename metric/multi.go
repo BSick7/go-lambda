@@ -6,13 +6,14 @@ import (
 	"strings"
 )
 
+// MultiEmitter provides the ability to wrap multiple emitters
 type MultiEmitter []Emitter
 
 func (e MultiEmitter) Contextualize(ctx context.Context) context.Context {
 	return WithEmitter(ctx, e)
 }
 
-func (e MultiEmitter) Add(point Point) {
+func (e MultiEmitter) Add(point *Point) {
 	for _, item := range e {
 		item.Add(point)
 	}

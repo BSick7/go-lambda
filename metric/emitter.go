@@ -8,7 +8,7 @@ import (
 
 type Emitter interface {
 	scaffold.Contextualizer
-	Add(point Point)
+	Add(point *Point)
 	Flush() error
 }
 

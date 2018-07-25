@@ -1,15 +1,14 @@
 package metric
 
 import (
-	"github.com/aws/aws-sdk-go-v2/service/cloudwatch"
+	"time"
 )
 
-type Point interface {
-	SetResolution(resolution int64) Point
-	ToAWS() cloudwatch.MetricDatum
-}
-
-type PointMarker interface {
-	Point
-	Mark()
+type Point struct {
+	Metric     string
+	Unit       string
+	Timestamp  time.Time
+	Resolution *int64
+	Value      float64
+	Tags       map[string]string
 }

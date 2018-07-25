@@ -12,7 +12,7 @@ var (
 	maxMetricsPerPut = 20
 )
 
-func PutCloudwatch(namespace string, values []Point) error {
+func PutCloudwatch(namespace string, values []cloudwatch.MetricDatum) error {
 	svc, err := services.NewCloudwatch()
 	if err != nil {
 		return fmt.Errorf("could not create cloudwatch service: %s", err)
@@ -32,7 +32,7 @@ func PutCloudwatch(namespace string, values []Point) error {
 
 	batch := make([]cloudwatch.MetricDatum, 0)
 	for _, item := range values {
-		batch = append(batch, item.ToAWS())
+		batch = append(batch, item)
 		if len(batch) >= maxMetricsPerPut {
 			if err := flush(batch); err != nil {
 				return err
