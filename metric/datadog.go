@@ -63,16 +63,23 @@ func toDatadogMetric(namespace string, point *Point) datadogMetric {
 	for n, v := range point.Tags {
 		tags = append(tags, fmt.Sprintf("%s:%s", n, v))
 	}
-	metric := strings.Replace(point.Metric, "-", ".", -1)
+	metric := point.Metric
 	if namespace != "" {
 		metric = fmt.Sprintf("%s.%s", namespace, metric)
 	}
+	metric = strings.Replace(strings.Replace(metric,
+		"-", ".", -1),
+		"/", ".", -1)
+
 	return datadogMetric{
 		Metric: metric,
 		Unit:   datadogMetricTypes[point.Unit],
 		Tags:   tags,
 		Points: [][]float64{
-			{float64(point.Timestamp.Unix())},
+			{
+				float64(point.Timestamp.Unix()),
+				point.Value,
+			},
 		},
 	}
 }
