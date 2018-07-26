@@ -15,6 +15,7 @@ func NewDatadogEmitter(apiKey, namespace string) Emitter {
 		server:    "https://api.datadoghq.com/api",
 		apiKey:    apiKey,
 		namespace: namespace,
+		allPoints: map[string][]*Point{},
 	}
 }
 
