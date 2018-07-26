@@ -1,3 +1,7 @@
+## 0.5.2 (Jul 26, 2018)
+
+  * Improved datadog flush to combine points with the same metric name.
+
 ## 0.5.1 (Jul 25, 2018)
 
   * Added macro for easy reporting of function duration.
